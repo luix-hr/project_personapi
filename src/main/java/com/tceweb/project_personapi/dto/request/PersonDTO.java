@@ -42,4 +42,6 @@ public class PersonDTO {
     public PersonDTO(Person person) {
         this(person.getId(), person.getFirstName(), person.getLastName(), person.getCpf(), person.getBirthDate(), person.getPhones().stream().map(PhoneDTO::new).toList());
     }
+
+
 }

@@ -1,7 +1,9 @@
 package com.tceweb.project_personapi.controller;
 
 import com.tceweb.project_personapi.dto.request.PersonDTO;
+import com.tceweb.project_personapi.exception.PersonNotFoundException;
 import com.tceweb.project_personapi.service.PersonService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ public class PersonController {
     private PersonService personService;
 
     @PostMapping
+    @Transactional
     public ResponseEntity<?> createPerson(@RequestBody @Valid PersonDTO personDTO){
         personDTO = personService.insert(personDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(personDTO.getId()).toUri();
@@ -30,5 +33,17 @@ public class PersonController {
     public ResponseEntity<List<PersonDTO>> listAll(){
         var list = personService.listAll();
         return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/{id}")
+    @Transactional
+    public ResponseEntity<PersonDTO> findById(@PathVariable Long id) throws PersonNotFoundException {
+        return ResponseEntity.ok(personService.findById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity atualizar(@RequestBody @Valid PersonDTO personAtt) throws PersonNotFoundException {
+        person.atualizarInfo(personAtt);
+        return ResponseEntity.ok();
     }
 }
